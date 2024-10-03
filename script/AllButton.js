@@ -1,22 +1,36 @@
 function AllButtonShow() {
   fetch('https://openapi.programming-hero.com/api/phero-tube/categories')
     .then(res => res.json())
-    .then(data => displayCategoriesBtn(data.categories));
+    .then(data => displayCategoriesBtn(data.categories))
+    .catch(err => console.log(err));
 }
+
+const ClickButton = id => {
+  // alert(id);
+
+  fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
+    .then(res => res.json())
+    .then(data => displayCategoriesVideo(data.category))
+    .catch(err => console.log(err));
+};
 
 const displayCategoriesBtn = categories => {
   const ButtonContainer = document.getElementById('AllButtonContainer');
 
   categories.forEach(item => {
-    const Button = document.createElement('button');
-    Button.classList.add('btn', 'btn-outline', 'px-5');
-    Button.innerText = item.category;
+    const ButtonContain = document.createElement('div');
+    ButtonContain.innerHTML = `
+      <button onclick="ClickButton(${item.category_id})" class="btn">
+        ${item.category}
+      </button>
+      `;
+    // console.log(item);
 
-    ButtonContainer.appendChild(Button);
+    ButtonContainer.appendChild(ButtonContain);
   });
 };
 
-// *****************************************************
+// *******************************************************************
 
 // video Part Start :
 function AllVideoShow() {
@@ -46,7 +60,8 @@ function ShowTime(Time) {
 
 const displayCategoriesVideo = videos => {
   const VideoContainer = document.getElementById('videoContainer');
-  console.log(videos);
+  VideoContainer.innerHTML = '';
+  // console.log(videos);
 
   videos.forEach(video => {
     const VideoFile = document.createElement('div');
