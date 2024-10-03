@@ -1,3 +1,5 @@
+function ButtonColor() {}
+
 function AllButtonShow() {
   fetch('https://openapi.programming-hero.com/api/phero-tube/categories')
     .then(res => res.json())
@@ -19,6 +21,7 @@ const displayCategoriesBtn = categories => {
 
   categories.forEach(item => {
     const ButtonContain = document.createElement('div');
+
     ButtonContain.innerHTML = `
       <button onclick="ClickButton(${item.category_id})" class="btn">
         ${item.category}
@@ -62,6 +65,18 @@ const displayCategoriesVideo = videos => {
   const VideoContainer = document.getElementById('videoContainer');
   VideoContainer.innerHTML = '';
   // console.log(videos);
+
+  if (videos.length == 0) {
+    VideoContainer.classList.remove('grid');
+    VideoContainer.innerHTML = `
+      <div class="flex flex-col justify-center items-center gap-7 mt-16">
+      <img class="w-[250px]" src="Image/Icon.png"/>
+      <h3 class="text-3xl font-bold ">Oops!! Sorry, There is no content here</h3>
+      </div>
+      `;
+  } else {
+    VideoContainer.classList.add('grid');
+  }
 
   videos.forEach(video => {
     const VideoFile = document.createElement('div');
