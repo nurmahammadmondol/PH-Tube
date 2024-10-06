@@ -1,4 +1,4 @@
-function ButtonColor() {}
+// *******************************************************************
 
 function AllButtonShow() {
   fetch('https://openapi.programming-hero.com/api/phero-tube/categories')
@@ -51,8 +51,10 @@ const displayCategoriesBtn = categories => {
 // *******************************************************************
 
 // video Part Start :
-function AllVideoShow() {
-  fetch('https://openapi.programming-hero.com/api/phero-tube/videos')
+function AllVideoShow(searchText = '') {
+  fetch(
+    `https://openapi.programming-hero.com/api/phero-tube/videos?title=${searchText}`
+  )
     .then(res => res.json())
     .then(data => displayCategoriesVideo(data.videos));
 }
@@ -167,5 +169,9 @@ const displayCategoriesVideo = videos => {
   });
 };
 
-AllVideoShow();
+document.getElementById('searchText').addEventListener('keyup', r => {
+  AllVideoShow(r.target.value);
+});
+
 AllButtonShow();
+AllVideoShow();
