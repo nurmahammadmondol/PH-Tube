@@ -7,12 +7,27 @@ function AllButtonShow() {
     .catch(err => console.log(err));
 }
 
-const ClickButton = id => {
-  // alert(id);
+const RemoveColorBtn = () => {
+  const items = document.getElementsByClassName('Btn-Color-remove');
 
+  for (let item of items) {
+    item.classList.remove('ActiveColor');
+  }
+};
+
+const ClickButton = id => {
   fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
     .then(res => res.json())
-    .then(data => displayCategoriesVideo(data.category))
+    .then(data => {
+      // All Btn Color Remove
+
+      RemoveColorBtn();
+
+      // One Btn Color Add
+      const ActiveButton = document.getElementById(`Btn-${id}`);
+      ActiveButton.classList.add('ActiveColor');
+      displayCategoriesVideo(data.category);
+    })
     .catch(err => console.log(err));
 };
 
@@ -23,7 +38,7 @@ const displayCategoriesBtn = categories => {
     const ButtonContain = document.createElement('div');
 
     ButtonContain.innerHTML = `
-      <button onclick="ClickButton(${item.category_id})" class="btn">
+      <button id="Btn-${item.category_id}" onclick="ClickButton(${item.category_id})" class="btn Btn-Color-remove">
         ${item.category}
       </button>
       `;
@@ -60,6 +75,26 @@ function ShowTime(Time) {
 
   return `${Hour} hour ${Minute} minute ${Second} second ago`;
 }
+
+// Details Show :
+const ShowDetails = async Details => {
+  const url = `https://openapi.programming-hero.com/api/phero-tube/video/${Details}`;
+
+  const res = await fetch(url);
+  const data = await res.json();
+  displayDetails(data.video);
+};
+
+const displayDetails = video => {
+  const DetailsBox = document.getElementById('detailsContainer');
+  DetailsBox.innerHTML = `
+  <img class="h-[250px] w-full" src="${video.thumbnail}"/>
+  <h3 class="font-bold my-3">${video.title}</h3>
+  <p>${video.description}</p>
+  `;
+
+  document.getElementById('CustomModal').showModal();
+};
 
 const displayCategoriesVideo = videos => {
   const VideoContainer = document.getElementById('videoContainer');
@@ -98,13 +133,13 @@ const displayCategoriesVideo = videos => {
 
    </figure>
 
-   <div class=" flex gap-3 ml-1 my-6">
+   <div class=" flex gap-3 my-3">
     <div class="h-10 w-10">
       <img class="h-full w-full rounded-full object-cover" src="${
         video.authors[0].profile_picture
       }"/>
     </div>
-    <div class="flex flex-col gap-1">
+    <div class="flex flex-col gap-1 w-full">
       <h2 class="text-xl font-bold">${video.title}</h2>
       <div class="flex items-center gap-2">
       <p>${video.authors[0].profile_name}</p>
@@ -115,9 +150,16 @@ const displayCategoriesVideo = videos => {
       }</span>
       </div>
       <small class="text-gray-400">${video.others.views} views</small>
+
+      <button onclick="ShowDetails('${
+        video.video_id
+      }')" class="btn font-semibold text-gray-500 flex justify-center ">Details</button>
+     
     </div>
-    
+  
    </div>
+
+    
 
   `;
 
